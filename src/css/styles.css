@@ -1,5 +1,5 @@
 .navbar {
-  border-bottom: 1px solid rgb(136, 51, 255);
+  border-bottom: 1px solid rgba(136, 51, 255, 0.5);
   position: fixed;
   top: 0;
   width: 100%;
@@ -19,12 +19,12 @@
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
 }
-.search-btn {
-  background-color: black;
-  color: white;
+.btn.search-btn {
+  background-color: black !important;
+  color: white !important;
   border-color: black !important;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  border-top-left-radius: 0 !important;
+  border-bottom-left-radius: 0 !important;
 }
 .search-btn:hover {
   background-color: #ebd96b;
@@ -128,4 +128,9 @@
   border-radius: 5px !important;
   padding-block: 12px !important;
   height: auto !important;
+}
+/* ***********************Signup***************************************** */
+.signup-wrapper {
+  max-width: 900px;
+  margin-inline: auto;
 }
