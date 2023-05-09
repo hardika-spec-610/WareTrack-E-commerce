@@ -2,8 +2,12 @@ import { Button, Container, Dropdown, Form, Navbar } from "react-bootstrap";
 import "../css/styles.css";
 import Logo from "../assets/logo.svg";
 import { BsCartFill } from "react-icons/bs";
+import { useSelector } from "react-redux";
 
 const HeaderCom = () => {
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
+  console.log(cartItems);
   return (
     <Navbar expand="lg">
       <Container>
@@ -41,7 +45,7 @@ const HeaderCom = () => {
             </Dropdown.Menu>
           </Dropdown>
           <div className="cart-block position-relative">
-            <div className="number-round">5</div>
+            <div className="number-round">{cartItems.length}</div>
             <BsCartFill
               size="28px"
               color="#ebd96b"

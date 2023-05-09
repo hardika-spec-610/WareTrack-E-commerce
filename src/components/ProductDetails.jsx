@@ -9,14 +9,16 @@ import {
 } from "react-bootstrap";
 import HeaderCom from "./HeaderCom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { productDetail } from "../redux/actions";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import "../css/styles.css";
 
 const ProductDetails = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const params = useParams();
+  const [qty, setQty] = useState(1);
   const productDetails = useSelector((state) => state.productDetails.products);
   console.log("productDetails", productDetails);
   const { isLoading, isError } = productDetails;
@@ -28,6 +30,7 @@ const ProductDetails = () => {
 
   const AddToCartHandle = (e) => {
     e.preventDefault();
+    navigate(`/cart/${params.productId}?qty=${qty}`);
   };
 
   return (
@@ -86,7 +89,11 @@ const ProductDetails = () => {
                           {" "}
                           <span className="d-flex mb-2">
                             <span className="sub-text-color">Quantity</span>
-                            <select className="ml-auto qty-select">
+                            <select
+                              value={qty}
+                              className="ml-auto qty-select"
+                              onChange={(e) => setQty(e.target.value)}
+                            >
                               {[...Array(productDetails.quantity).keys()].map(
                                 (x) => (
                                   <option key={x + 1} value={x + 1}>

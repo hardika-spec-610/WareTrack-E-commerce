@@ -6,6 +6,7 @@ import loginReducer from "../reducers/loginReducer";
 import { registerUserReducer } from "../reducers/registerUserReducer";
 import usersReducer from "../reducers/usersReducer";
 import productDetailReducer from "../reducers/ProductDeatilReducer";
+import cartReducer from "../reducers/CartReducer";
 
 const persistConfig = {
   storage: sessionStorage,
@@ -22,12 +23,24 @@ const combinedReducer = combineReducers({
   allUsers: usersReducer,
   productList: productsReducer,
   productDetails: productDetailReducer,
+  cart: cartReducer,
 });
+
+const cartItemsFromLocalStorage = localStorage.getItem("cartItem")
+  ? JSON.parse(localStorage.getItem("cartItem"))
+  : [];
+
+const initialState = {
+  cart: {
+    cartItems: cartItemsFromLocalStorage,
+  },
+};
 
 const persistedReducer = persistReducer(persistConfig, combinedReducer);
 
 const store = configureStore({
   reducer: persistedReducer,
+  initialState,
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
       immutableCheck: { warnAfter: 128 },

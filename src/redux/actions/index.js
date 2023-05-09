@@ -6,6 +6,8 @@ export const PRODUCT_LIST_FAIL = "PRODUCT_LIST_FAIL";
 export const PRODUCT_DETAILS_REQUEST = "PRODUCT_DETAILS_REQUEST";
 export const PRODUCT_DETAILS_SUCCESS = "PRODUCT_DETAILS_SUCCESS";
 export const PRODUCT_DETAILS_FAIL = "PRODUCT_DETAILS_FAIL";
+export const CART_ADD_ITEM = "CART_ADD_ITEM";
+export const CART_REMOVE_ITEM = "CART_REMOVE_ITEM";
 
 let token = localStorage.getItem("accessToken");
 console.log("token", token);
@@ -102,7 +104,7 @@ export const productDetail = (productId) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("singleproduct", data);
+        console.log("cartpro", data);
         dispatch({
           type: PRODUCT_DETAILS_SUCCESS,
           payload: data,
@@ -113,6 +115,60 @@ export const productDetail = (productId) => {
         type: PRODUCT_DETAILS_FAIL,
         payload: error.message || error,
       });
+    }
+  };
+};
+
+export const addToCart = (productId, qty) => {
+  return async (dispatch, getState) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BE_URL}/products/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("cartdetails", data);
+        dispatch({
+          type: CART_ADD_ITEM,
+          payload: {
+            product: data._id,
+            name: data.name,
+            imageUrl: data.imageUrl,
+            price: data.price,
+            quantity: data.quantity,
+            qty,
+          },
+        });
+        localStorage.setItem(
+          "cartItems",
+          JSON.stringify(getState().cart.cartItems)
+        );
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+export const removeFromCart = (productId) => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CART_REMOVE_ITEM,
+        payload: productId,
+      });
+      localStorage.setItem(
+        "cartItems",
+        JSON.stringify(getState().cart.cartItems)
+      );
+    } catch (error) {
+      console.error(error);
     }
   };
 };

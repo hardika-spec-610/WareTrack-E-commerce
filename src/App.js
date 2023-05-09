@@ -7,6 +7,7 @@ import Home from "./components/Home";
 import LoginComponent from "./components/LoginComponent";
 import SignUpcomponent from "./components/SignUpComponent";
 import ProductDetails from "./components/ProductDetails";
+import CartScreen from "./components/CartScreen";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route element={<SignUpcomponent />} path="/signup" />
             <Route element={<Home />} path="/dashboard" />
             <Route element={<ProductDetails />} path="/details/:productId" />
+            <Route element={<CartScreen />} path="/cart/:productId?" />
           </Routes>
         </Router>
       </header>

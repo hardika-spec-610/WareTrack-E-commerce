@@ -37,7 +37,10 @@ const ProductSection = (props) => {
                   key={p._id}
                   className=" col-12 mb-4 col-sm-12 mb-sm-4 col-md-4 mb-md-4 col-lg-4 mb-lg-4 col-xl-3 d-flex justify-content-stretch"
                 >
-                  <Link className="w-100 card-link" to={`/details/${p._id}`}>
+                  <Link
+                    className="w-100 card-link d-flex justify-content-stretch"
+                    to={`/details/${p._id}`}
+                  >
                     <Card className="product-card w-100">
                       <div className="bg-color">
                         <Card.Img
