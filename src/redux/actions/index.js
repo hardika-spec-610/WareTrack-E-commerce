@@ -3,6 +3,10 @@ export const REGISTER_USER = "REGISTER_USER";
 export const GET_USERS = "GET_USERS";
 export const PRODUCT_LIST_SUCCESS = "PRODUCT_LIST_SUCCESS";
 export const PRODUCT_LIST_FAIL = "PRODUCT_LIST_FAIL";
+export const PRODUCT_DETAILS_REQUEST = "PRODUCT_DETAILS_REQUEST";
+export const PRODUCT_DETAILS_SUCCESS = "PRODUCT_DETAILS_SUCCESS";
+export const PRODUCT_DETAILS_FAIL = "PRODUCT_DETAILS_FAIL";
+
 let token = localStorage.getItem("accessToken");
 console.log("token", token);
 
@@ -76,6 +80,37 @@ export const getAllProducts = () => {
     } catch (error) {
       dispatch({
         type: PRODUCT_LIST_FAIL,
+        payload: error.message || error,
+      });
+    }
+  };
+};
+export const productDetail = (productId) => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: PRODUCT_DETAILS_REQUEST,
+      });
+      const response = await fetch(
+        `${process.env.REACT_APP_BE_URL}/products/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("singleproduct", data);
+        dispatch({
+          type: PRODUCT_DETAILS_SUCCESS,
+          payload: data,
+        });
+      }
+    } catch (error) {
+      dispatch({
+        type: PRODUCT_DETAILS_FAIL,
         payload: error.message || error,
       });
     }

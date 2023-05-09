@@ -14,7 +14,6 @@ const Home = () => {
       <Container>
         <h4 className="pro-title">NEW ARRIVALS</h4>
         <ProductSection />
-        <ProductSection />
         <PaginationControl
           page={page}
           between={3}

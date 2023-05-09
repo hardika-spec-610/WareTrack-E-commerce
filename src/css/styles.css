@@ -7,6 +7,9 @@
   background-color: white;
   box-shadow: 0px 3px 5px rgba(136, 51, 255, 0.3);
 }
+.navbar-space {
+  height: 82px;
+}
 .logo {
   width: 90%;
 }
@@ -81,6 +84,7 @@
 .product-card {
   border-color: #8833ff !important;
   border-radius: 6px !important;
+  cursor: pointer !important;
 }
 .jumbotron {
   margin-top: 80px;
@@ -103,9 +107,37 @@
   background-color: #8833ff;
   border-color: #8833ff;
 }
+.detail-block {
+  margin-top: 3em;
+}
+.card-link {
+  color: black;
+}
+.right-info-block {
+  background-color: #cfc8ff;
+  padding-block: 15px;
+  padding-inline: 20px;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.product-img {
+  width: 75%;
+}
+.qty-select {
+  border-width: 0;
+  background-color: #cfc8ff;
+  border-radius: 5px;
+  padding-block: 3px;
+  padding-inline: 14px;
+}
+.detail-list {
+  width: 75%;
+}
 /* **************************************Login*************************** */
 .login-wrapper {
-  background-color: #d9abfd;
+  background-color: #cfc8ff;
   height: 100vh;
 }
 .login-block {
