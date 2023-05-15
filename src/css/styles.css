@@ -21,7 +21,7 @@
   height: 200px;
 }
 .bg-color {
-  background-color: #fff5bf;
+  /* background-color: #fff5bf; */
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
 }
@@ -157,6 +157,9 @@
   border-color: #8f8f8f !important;
   padding-block: 12px !important;
 }
+.blue-btn a {
+  color: white !important;
+}
 .dark-bdr-fill {
   background-color: #edf0f2 !important;
   border-color: #8f8f8f !important;
@@ -196,4 +199,37 @@
   background-color: black !important;
   color: white !important;
   padding-block: 12px !important;
+}
+/* **************************************Shipping form****************** */
+.max-shipping-form {
+  max-width: 500px;
+  width: 100%;
+}
+/* ******************************payment************************** */
+.payment-block {
+  border: 1px solid #ced4da;
+  max-width: 500px;
+  width: 100%;
+  padding-inline: 2em;
+  padding-block: 2em;
+  text-align: center;
+}
+.icon-block {
+  width: 20%;
+}
+.light-icon-color {
+  background-color: #b6d3fa;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.order-right-info,
+.info-b {
+  width: 80%;
+}
+.img-b {
+  width: 20%;
 }

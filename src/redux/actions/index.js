@@ -8,6 +8,12 @@ export const PRODUCT_DETAILS_SUCCESS = "PRODUCT_DETAILS_SUCCESS";
 export const PRODUCT_DETAILS_FAIL = "PRODUCT_DETAILS_FAIL";
 export const CART_ADD_ITEM = "CART_ADD_ITEM";
 export const CART_REMOVE_ITEM = "CART_REMOVE_ITEM";
+export const GET_ME = "GET_ME";
+export const GET_ME_LOADING = "GET_ME_LOADING";
+export const GET_ME_ERROR = "GET_ME_ERROR";
+export const USER_LOGOUT = "USER_LOGOUT";
+export const CART_SAVE_SHIPPING_ADDRESS = "CART_SAVE_SHIPPING_ADDRESS";
+export const CART_SAVE_PAYMENT_METHOD = "CART_SAVE_PAYMENT_METHOD";
 
 let token = localStorage.getItem("accessToken");
 console.log("token", token);
@@ -43,9 +49,9 @@ export const getAllUsers = () => {
   return async (dispatch, getState) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_BE_URL}/users`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
       });
 
       if (response.ok) {
@@ -58,6 +64,49 @@ export const getAllUsers = () => {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+};
+
+export const userProfile = () => {
+  return async (dispatch, getState) => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_BE_URL}/users/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("profile", data);
+        dispatch({
+          type: GET_ME,
+          payload: data,
+        });
+        dispatch({
+          type: GET_ME_LOADING,
+          payload: false,
+        });
+      } else {
+        dispatch({
+          type: GET_ME_LOADING,
+          payload: false,
+        });
+        dispatch({
+          type: GET_ME_ERROR,
+          payload: true,
+        });
+      }
+    } catch (error) {
+      dispatch({
+        type: GET_ME_LOADING,
+        payload: false,
+      });
+      dispatch({
+        type: GET_ME_ERROR,
+        payload: true,
+      });
     }
   };
 };
@@ -167,6 +216,48 @@ export const removeFromCart = (productId) => {
         "cartItems",
         JSON.stringify(getState().cart.cartItems)
       );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+export const logout = () => {
+  return async (dispatch, getState) => {
+    localStorage.removeItem(token);
+    console.log("removetoken", localStorage.removeItem("accessToken"));
+    try {
+      dispatch({
+        type: USER_LOGOUT,
+      });
+      document.location.href = "/";
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+export const saveShippingAddress = (data) => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CART_SAVE_SHIPPING_ADDRESS,
+        payload: data,
+      });
+      localStorage.setItem("shippingAddress", JSON.stringify(data));
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+export const savePaymentMethod = (data) => {
+  return async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: CART_SAVE_PAYMENT_METHOD,
+        payload: data,
+      });
+      localStorage.setItem("paymentMethod", JSON.stringify(data));
     } catch (error) {
       console.error(error);
     }

@@ -155,15 +155,13 @@ const CartScreen = () => {
                 </Button>
               </Link>
               {total > 0 && (
-                <Link>
-                  <Button
-                    type="button"
-                    className="mt-4 blue-btn"
-                    onClick={checkOutHandler}
-                  >
-                    Checkout
-                  </Button>
-                </Link>
+                <Button
+                  type="button"
+                  className="mt-4 blue-btn"
+                  onClick={checkOutHandler}
+                >
+                  <Link to="/shipping"> Checkout</Link>
+                </Button>
               )}
             </div>
           </>
