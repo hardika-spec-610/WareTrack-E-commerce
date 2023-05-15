@@ -8,6 +8,12 @@ import usersReducer from "../reducers/usersReducer";
 import productDetailReducer from "../reducers/ProductDeatilReducer";
 import cartReducer from "../reducers/CartReducer";
 import userProfileReducer from "../reducers/userProfileReducer";
+import {
+  orderCreateReducer,
+  orderDeatilsReducer,
+  orderPayReducer,
+} from "../reducers/orderReducer";
+import orderDetailsReducer from "../reducers/orderDetailsReducer";
 
 const persistConfig = {
   storage: sessionStorage,
@@ -26,6 +32,10 @@ const combinedReducer = combineReducers({
   productDetails: productDetailReducer,
   cart: cartReducer,
   profile: userProfileReducer,
+  orderCreate: orderCreateReducer,
+  // orderDetails: orderDeatilsReducer,
+  orderDetails: orderDetailsReducer,
+  orderPay: orderPayReducer,
 });
 
 const cartItemsFromLocalStorage = localStorage.getItem("cartItem")

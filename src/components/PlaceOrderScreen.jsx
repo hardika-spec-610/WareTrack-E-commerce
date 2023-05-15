@@ -1,12 +1,23 @@
-import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Container,
+  Row,
+  Table,
+} from "react-bootstrap";
 import HeaderCom from "./HeaderCom";
 import { FaUserAlt, FaTruckMoving } from "react-icons/fa";
 import { HiLocationMarker } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { ORDER_CREATE_RESET, createOrder } from "../redux/actions";
 
 const PlaceOrderScreen = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cart = useSelector((state) => state.cart);
   console.log("cart", cart);
   const profile = useSelector((state) => state.profile.user);
@@ -16,20 +27,66 @@ const PlaceOrderScreen = () => {
     return (Math.round(num * 100) / 100).toFixed(2);
   };
 
-  cart.itemsPrice = addDecimals(
-    cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+  const updatedCart = {
+    ...cart,
+    itemsPrice: addDecimals(
+      cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+    ),
+    shippingPrice: addDecimals(cart.itemsPrice > 100 ? 0 : 5),
+  };
+  updatedCart.taxPrice = addDecimals(
+    Number((0.15 * updatedCart.itemsPrice).toFixed(2))
+  );
+  updatedCart.totalPrice = addDecimals(
+    Number(updatedCart.itemsPrice) +
+      Number(updatedCart.shippingPrice) +
+      Number(updatedCart.taxPrice)
   );
 
-  cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 5);
-  cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
-  cart.totalPrice = (
-    Number(cart.itemsPrice) +
-    Number(cart.shippingPrice) +
-    Number(cart.taxPrice)
-  ).toFixed(2);
+  console.log("updatedCart", updatedCart);
+  // const addDecimals = (num) => {
+  //   return (Math.round(num * 100) / 100).toFixed(2);
+  // };
 
-  const placeOrderHandler = (e) => {
-    e.prebventDefault();
+  // cart.itemsPrice = addDecimals(
+  //   cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
+  // );
+
+  // cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 5);
+  // cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
+  // cart.totalPrice = (
+  //   Number(cart.itemsPrice) +
+  //   Number(cart.shippingPrice) +
+  //   Number(cart.taxPrice)
+  // ).toFixed(2);
+
+  const orderCreate = useSelector((state) => state.orderCreate);
+  console.log("orderCreate", orderCreate);
+  const { order, isLoading, isError, success } = orderCreate;
+  console.log("orderId", order._id);
+
+  // useEffect(() => {
+  //   if (success) {
+  //     navigate(`/orders/${order._id}`);
+  //     // dispatch({ type: ORDER_CREATE_RESET });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dispatch, success, order]);
+
+  const placeOrderHandler = () => {
+    dispatch(
+      createOrder({
+        user: profile._id,
+        orderItems: updatedCart.cartItems,
+        shippingAddress: updatedCart.shippingAddress,
+        paymentMethod: updatedCart.paymentMethod,
+        itemsPrice: updatedCart.itemsPrice,
+        shippingPrice: updatedCart.shippingPrice,
+        taxPrice: updatedCart.taxPrice,
+        totalPrice: updatedCart.totalPrice,
+      })
+    );
+    navigate(`/orders/${order._id}`);
   };
 
   return (
@@ -93,7 +150,7 @@ const PlaceOrderScreen = () => {
                 </div>
               </Col>
             </Row>
-            {cart.cartItems.length === 0 ? (
+            {updatedCart.cartItems.length === 0 ? (
               <div className="alert alert-info text-center mt-3">
                 {" "}
                 Your cart is empty
@@ -116,7 +173,7 @@ const PlaceOrderScreen = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {cart.cartItems.map((item, index) => (
+                    {updatedCart.cartItems.map((item, index) => (
                       <tr key={item.product}>
                         <td>{index + 1}</td>
                         <td>
@@ -152,10 +209,10 @@ const PlaceOrderScreen = () => {
                     <span className="mr-4">Grand total:</span>
                   </div>
                   <div className="d-flex flex-column align-items-end">
-                    <span>{cart.itemsPrice}€</span>
-                    <span>{cart.shippingPrice}€</span>
-                    <span>{cart.taxPrice}€</span>
-                    <b>{cart.totalPrice}€</b>
+                    <span>{updatedCart.itemsPrice}€</span>
+                    <span>{updatedCart.shippingPrice}€</span>
+                    <span>{updatedCart.taxPrice}€</span>
+                    <b>{updatedCart.totalPrice}€</b>
                   </div>
                 </div>
                 <div className="d-flex justify-content-end mt-3">
@@ -164,9 +221,12 @@ const PlaceOrderScreen = () => {
                     className="blue-btn"
                     onClick={placeOrderHandler}
                   >
-                    <Link to="/shipping">Place Order</Link>
+                    Place Order
                   </Button>
                 </div>
+                {isError && (
+                  <Alert variant="danger">Aww snap, we got an error!😨</Alert>
+                )}
               </>
             )}
           </Card.Body>

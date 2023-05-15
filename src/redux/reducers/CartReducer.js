@@ -1,5 +1,6 @@
 import {
   CART_ADD_ITEM,
+  CART_CLEAR_ITEMS,
   CART_REMOVE_ITEM,
   CART_SAVE_PAYMENT_METHOD,
   CART_SAVE_SHIPPING_ADDRESS,
@@ -9,7 +10,6 @@ const initialState = {
   cartItems: [],
   shippingAddress: {},
   paymentMethod: {},
-  itemsPrice: 0,
 };
 
 const cartReducer = (state = initialState, action) => {
@@ -44,6 +44,11 @@ const cartReducer = (state = initialState, action) => {
       return {
         ...state,
         paymentMethod: action.payload,
+      };
+    case CART_CLEAR_ITEMS:
+      return {
+        ...state,
+        cartItems: [],
       };
     default:
       return state;

@@ -8,9 +8,10 @@ import { useEffect } from "react";
 
 const HeaderCom = () => {
   const cart = useSelector((state) => state.cart);
+  console.log("headerCart", cart);
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile.user);
-  console.log("profileNav", profile);
+  // console.log("profileNav", profile);
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -20,7 +21,7 @@ const HeaderCom = () => {
   }, [dispatch]);
 
   const { cartItems } = cart;
-  console.log(cartItems);
+  // console.log(cartItems);
   return (
     <Navbar expand="lg">
       <Container>

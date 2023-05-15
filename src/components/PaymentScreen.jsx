@@ -23,7 +23,6 @@ const PaymentScreen = () => {
     e.preventDefault();
     // console.log(e);
     dispatch(savePaymentMethod(paymentMethod));
-
     navigate("/placeorder");
   };
   return (
