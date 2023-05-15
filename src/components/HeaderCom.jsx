@@ -2,12 +2,26 @@ import { Button, Container, Dropdown, Form, Navbar } from "react-bootstrap";
 import "../css/styles.css";
 import Logo from "../assets/logo.svg";
 import { BsCartFill } from "react-icons/bs";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, userProfile } from "../redux/actions";
+import { useEffect } from "react";
 
 const HeaderCom = () => {
   const cart = useSelector((state) => state.cart);
+  console.log("headerCart", cart);
+  const dispatch = useDispatch();
+  const profile = useSelector((state) => state.profile.user);
+  // console.log("profileNav", profile);
+
+  const logoutHandler = () => {
+    dispatch(logout());
+  };
+  useEffect(() => {
+    dispatch(userProfile());
+  }, [dispatch]);
+
   const { cartItems } = cart;
-  console.log(cartItems);
+  // console.log(cartItems);
   return (
     <Navbar expand="lg">
       <Container>
@@ -35,13 +49,13 @@ const HeaderCom = () => {
               id="dropdown-basic"
               className="user-wrapper"
             >
-              Hi,User
+              Hi, {profile?.firstName}
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="dropdown-menu-right">
-              <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-              <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+              <Dropdown.Item href="#/action-1" onClick={logoutHandler}>
+                Logout
+              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
           <div className="cart-block position-relative">

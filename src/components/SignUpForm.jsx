@@ -86,15 +86,6 @@ const SignUpForm = () => {
                       email: e.target.value,
                     });
                   }}
-                  //   onBlur={(e) => {
-                  //     const email = e.target.value;
-                  //     const userExists = allUsers.find(
-                  //       (user) => user.email === email
-                  //     );
-                  //     if (userExists) {
-                  //       toast.error("Email already exists");
-                  //     }
-                  //   }}
                 />
               </Form.Group>
             </Col>

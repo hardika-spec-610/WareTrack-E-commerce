@@ -16,8 +16,9 @@ const CartScreen = () => {
   const qty = location.search ? Number(location.search.split("=")[1]) : 1;
   //   console.log(qty);
   const cart = useSelector((state) => state.cart);
+  console.log("cartScreenCart", cart);
   const { cartItems } = cart;
-  console.log(cartItems);
+  // console.log(cartItems);
 
   useEffect(() => {
     if (params.productId) {
@@ -26,8 +27,8 @@ const CartScreen = () => {
   }, [dispatch, params.productId, qty]);
 
   const total = cartItems.reduce((acc, item) => acc + item.qty * item.price, 0);
+  console.log("total", total);
 
-  const checkOutHandler = () => {};
   const removeFromCartHandle = (_id) => {
     dispatch(removeFromCart(_id));
   };
@@ -57,91 +58,87 @@ const CartScreen = () => {
                 </p>
               </div>
               {cartItems.map((item) => (
-                <>
+                <div
+                  key={item.product}
+                  className="mt-3 border-bottom position-relative"
+                >
                   <div
-                    key={item.product}
-                    className="mt-3 border-bottom position-relative"
+                    className="remove-button "
+                    onClick={() => removeFromCartHandle(item.product)}
                   >
-                    <div
-                      className="remove-button "
-                      onClick={() => removeFromCartHandle(item.product)}
-                    >
-                      <AiFillCloseCircle size={24} fill="#ff0000" />
-                    </div>
-                    <Row>
-                      <Col xs={12} sm={12} md={6} lg={6} xl={6}>
-                        <div className="px-3">
-                          <Row className="align-items-center">
-                            <Col md={6}>
-                              <div>
-                                <img
-                                  src={item.imageUrl}
-                                  alt={item.name}
-                                  className="w-75"
-                                />
-                              </div>
-                            </Col>
-                            <Col md={6}>
-                              <Link to={`/details/${item.product}`}>
-                                <h5>{item.name}</h5>
-                              </Link>
-                            </Col>
-                          </Row>
-                        </div>
-                      </Col>
-                      <Col xs={12} sm={12} md={6} lg={6} xl={6}>
-                        <div className="h-100 px-3">
-                          <Row className="align-items-center h-100">
-                            <Col md={3}>
-                              <div className="text-center">
-                                <p>Quantity</p>
-                                <select
-                                  value={item.qty}
-                                  className="ml-auto qty-select"
-                                  onChange={(e) =>
-                                    dispatch(
-                                      addToCart(
-                                        item.product,
-                                        Number(e.target.value)
-                                      )
-                                    )
-                                  }
-                                >
-                                  {[...Array(item.quantity).keys()].map((x) => (
-                                    <option key={x + 1} value={x + 1}>
-                                      {x + 1}
-                                    </option>
-                                  ))}
-                                </select>
-                              </div>
-                            </Col>
-                            <Col md={2}>
-                              <div className="text-center">
-                                <p>x</p>
-                              </div>
-                            </Col>
-                            <Col md={3}>
-                              <div className="text-center">
-                                <p>price</p>
-                                <p>{item.price}€</p>
-                              </div>
-                            </Col>
-                            <Col md={3}>
-                              <div className="text-center">
-                                <p>Subtotal</p>
-                                <p>
-                                  {parseFloat(item.qty) *
-                                    parseFloat(item.price)}
-                                  €
-                                </p>
-                              </div>
-                            </Col>
-                          </Row>
-                        </div>
-                      </Col>
-                    </Row>
+                    <AiFillCloseCircle size={24} fill="#ff0000" />
                   </div>
-                </>
+                  <Row>
+                    <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+                      <div className="px-3">
+                        <Row className="align-items-center">
+                          <Col md={6}>
+                            <div>
+                              <img
+                                src={item.imageUrl}
+                                alt={item.name}
+                                className="w-75"
+                              />
+                            </div>
+                          </Col>
+                          <Col md={6}>
+                            <Link to={`/details/${item.product}`}>
+                              <h5>{item.name}</h5>
+                            </Link>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Col>
+                    <Col xs={12} sm={12} md={6} lg={6} xl={6}>
+                      <div className="h-100 px-3">
+                        <Row className="align-items-center h-100">
+                          <Col md={3}>
+                            <div className="text-center">
+                              <p>Quantity</p>
+                              <select
+                                value={item.qty}
+                                className="ml-auto qty-select"
+                                onChange={(e) =>
+                                  dispatch(
+                                    addToCart(
+                                      item.product,
+                                      Number(e.target.value)
+                                    )
+                                  )
+                                }
+                              >
+                                {[...Array(item.quantity).keys()].map((x) => (
+                                  <option key={x + 1} value={x + 1}>
+                                    {x + 1}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                          </Col>
+                          <Col md={2}>
+                            <div className="text-center">
+                              <p>x</p>
+                            </div>
+                          </Col>
+                          <Col md={3}>
+                            <div className="text-center">
+                              <p>price</p>
+                              <p>{item.price}€</p>
+                            </div>
+                          </Col>
+                          <Col md={3}>
+                            <div className="text-center">
+                              <p>Subtotal</p>
+                              <p>
+                                {parseFloat(item.qty) * parseFloat(item.price)}€
+                              </p>
+                            </div>
+                          </Col>
+                        </Row>
+                      </div>
+                    </Col>
+                  </Row>
+                </div>
               ))}
               <p className="text-right font-weight-bold mt-3 mr-4">
                 Total:{" "}
@@ -155,15 +152,9 @@ const CartScreen = () => {
                 </Button>
               </Link>
               {total > 0 && (
-                <Link>
-                  <Button
-                    type="button"
-                    className="mt-4 blue-btn"
-                    onClick={checkOutHandler}
-                  >
-                    Checkout
-                  </Button>
-                </Link>
+                <Button type="button" className="mt-4 blue-btn">
+                  <Link to="/shipping"> Checkout</Link>
+                </Button>
               )}
             </div>
           </>
