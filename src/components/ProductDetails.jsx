@@ -38,7 +38,7 @@ const ProductDetails = () => {
       <HeaderCom />
       <div className="navbar-space"></div>
       <Container>
-        <Row className="detail-block">
+        <Row className="detail-block mb-5">
           {isLoading ? (
             <Spinner animation="grow" />
           ) : isError ? (

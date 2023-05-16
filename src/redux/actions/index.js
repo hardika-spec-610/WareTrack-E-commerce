@@ -298,11 +298,6 @@ export const createOrder = (order) => {
           type: ORDER_CREATE_SUCCESS,
           payload: data,
         });
-        // dispatch({
-        //   type: CART_CLEAR_ITEMS,
-        //   payload: data,
-        // });
-        // localStorage.removeItem("cartItems", JSON.stringify(data));
       }
     } catch (error) {
       dispatch({
@@ -383,6 +378,11 @@ export const payOrder = (paymentResult, orderId) => {
           type: ORDER_PAY_SUCCESS,
           payload: data,
         });
+        dispatch({
+          type: CART_CLEAR_ITEMS,
+          payload: data,
+        });
+        localStorage.removeItem("cartItems", JSON.stringify(data));
       }
     } catch (error) {
       dispatch({

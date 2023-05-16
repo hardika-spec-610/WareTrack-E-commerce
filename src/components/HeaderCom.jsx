@@ -11,6 +11,8 @@ const HeaderCom = () => {
   console.log("headerCart", cart);
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile.user);
+  const orderDetails = useSelector((state) => state.orderDetails.orders);
+  console.log("headerorderDetails", orderDetails);
   // console.log("profileNav", profile);
 
   const logoutHandler = () => {

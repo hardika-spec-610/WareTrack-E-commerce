@@ -17,16 +17,17 @@ const OrderScreen = () => {
   const [sdkReady, setSdkReady] = useState(false);
   // const cart = useSelector((state) => state.cart);
   // console.log("orderScreen", cart);
-  const orderDetails = useSelector((state) => state.orderDetails);
+  const orderDetails = useSelector((state) => state.orderDetails.orders);
   console.log("orderDetails", orderDetails);
-  // const { order } = orderDetails;
-  const order = orderDetails.orders;
-  console.log("orderscreenOrder", order);
+  const order = useSelector((state) => state.orderCreate.order);
+  console.log("orderScreen", order);
+  // const [itemsPrice, setItemsPrice] = useState(false);
   const orderPay = useSelector((state) => state.orderPay);
   console.log("orderPay", orderPay);
   const { success: successPay } = orderPay;
   const isLoading = useSelector((state) => state.orderPay.isLoading);
-  if (order) {
+
+  if (order.orderItems && order.orderItems.length > 0) {
     // Perform your calculations
     const addDecimals = (num) => {
       return (Math.round(num * 100) / 100).toFixed(2);
@@ -39,6 +40,9 @@ const OrderScreen = () => {
       )
     );
   }
+  useEffect(() => {
+    dispatch(getOrderDetails(params.orderId));
+  }, []);
 
   useEffect(() => {
     // dispatch(getOrderDetails(params.orderId));
@@ -70,7 +74,7 @@ const OrderScreen = () => {
 
   const successPaymentHandler = (paymentResult) => {
     console.log("paymentResult", paymentResult);
-    // dispatch(payOrder(params.orderId, paymentResult.payment));
+    dispatch(payOrder(paymentResult.payment, params.orderId));
   };
 
   return (
@@ -78,7 +82,7 @@ const OrderScreen = () => {
       <HeaderCom />
       <div className="navbar-space"></div>
       <Container>
-        <Card className="mt-4">
+        <Card className="my-4">
           <Card.Body>
             <Row>
               <Col xs={12} sm={12} md={4} lg={4} xl={4}>
@@ -91,10 +95,14 @@ const OrderScreen = () => {
                   <div className="order-right-info">
                     <p className="mb-0 font-weight-bold">Customer</p>{" "}
                     <p className="mb-0">
-                      {order.user?.firstName} {order.user?.lastName}
+                      {orderDetails.user?.firstName}{" "}
+                      {orderDetails.user?.lastName}
                     </p>{" "}
-                    <a href={`mailto:${order.user?.email}`} className="mb-0">
-                      {order.user?.email}
+                    <a
+                      href={`mailto:${orderDetails.user?.email}`}
+                      className="mb-0"
+                    >
+                      {orderDetails.user?.email}
                     </a>
                   </div>
                 </div>
@@ -109,13 +117,14 @@ const OrderScreen = () => {
                   <div className="order-right-info">
                     <p className="mb-0 font-weight-bold">Order Info</p>{" "}
                     <p className="mb-0">
-                      Shipping: {order.shippingAddress?.city}
+                      Shipping: {orderDetails.shippingAddress?.city}
                     </p>{" "}
                     <p className="mb-0">Pay method: {order.paymentMethod}</p>
-                    {order.isPaid ? (
+                    {orderDetails.isPaid ? (
                       <div className="bg-info">
                         <p className="text-white text-center text-sm -start">
-                          Paid on {format(new Date(order.paidAt), "PPpp")}
+                          Paid on{" "}
+                          {format(new Date(orderDetails.paidAt), "PPpp")}
                         </p>
                       </div>
                     ) : (
@@ -138,16 +147,16 @@ const OrderScreen = () => {
                   <div className="order-right-info">
                     <p className="mb-0 font-weight-bold">Deliver to</p>{" "}
                     <p className="mb-0">
-                      Address: {order.shippingAddress?.address},{" "}
-                      {order.shippingAddress?.city},
-                      {order.shippingAddress?.postalCode}{" "}
-                      {order.shippingAddress?.country}
+                      Address: {orderDetails.shippingAddress?.address},{" "}
+                      {orderDetails.shippingAddress?.city},
+                      {orderDetails.shippingAddress?.postalCode}{" "}
+                      {orderDetails.shippingAddress?.country}
                     </p>{" "}
-                    {order.isDelivered ? (
+                    {orderDetails.isDelivered ? (
                       <div className="bg-info">
                         <p className="text-white text-center text-sm -start">
                           Delivered on{" "}
-                          {format(new Date(order.deliveredAt), "PPpp")}
+                          {format(new Date(orderDetails.deliveredAt), "PPpp")}
                         </p>
                       </div>
                     ) : (
@@ -228,10 +237,10 @@ const OrderScreen = () => {
                     <b>{order.totalPrice}€</b>
                   </div>
                 </div>
-                {!order.isPaid && (
+                {!orderDetails.isPaid && (
                   <div className="d-flex justify-content-end mt-3">
                     <PayPalButton
-                      amount={order.totalPrice}
+                      amount={orderDetails.totalPrice}
                       onSuccess={successPaymentHandler}
                     />
                   </div>
@@ -240,6 +249,13 @@ const OrderScreen = () => {
             )}
           </Card.Body>
         </Card>
+        {orderDetails.isPaid ? (
+          <Link to="/dashboard">
+            <Button type="button" className="my-4 shopping-btn ">
+              Continue To Shopping
+            </Button>
+          </Link>
+        ) : null}
       </Container>
     </div>
   );

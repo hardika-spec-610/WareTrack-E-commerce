@@ -15,7 +15,7 @@ const orderDetailsReducer = (state = initialState, action) => {
     case ORDER_DETAILS_SUCCESS:
       return {
         ...state,
-        orders: [...action.payload],
+        orders: action.payload,
       };
     case ORDER_DETAILS_LOADING:
       //   console.log(action.payload);
