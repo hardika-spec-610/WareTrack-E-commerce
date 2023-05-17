@@ -15,9 +15,11 @@ export const USER_LOGOUT = "USER_LOGOUT";
 export const CART_SAVE_SHIPPING_ADDRESS = "CART_SAVE_SHIPPING_ADDRESS";
 export const CART_SAVE_PAYMENT_METHOD = "CART_SAVE_PAYMENT_METHOD";
 export const CART_CLEAR_ITEMS = "CART_CLEAR_ITEMS";
-export const ORDER_CREATE_REQUEST = "ORDER_CREATE_REQUEST";
+// export const ORDER_CREATE_REQUEST = "ORDER_CREATE_REQUEST";
 export const ORDER_CREATE_SUCCESS = "ORDER_CREATE_SUCCESS";
-export const ORDER_CREATE_FAIL = "ORDER_CREATE_FAIL";
+// export const ORDER_CREATE_FAIL = "ORDER_CREATE_FAIL";
+export const ORDER_CREATE_LOADING = "ORDER_CREATE_LOADING";
+export const ORDER_CREATE_ERROR = "ORDER_CREATE_ERROR";
 export const ORDER_CREATE_RESET = "ORDER_CREATE_RESET";
 export const ORDER_DETAILS_LOADING = "ORDER_DETAILS_LOADING";
 export const ORDER_DETAILS_SUCCESS = "ORDER_DETAILS_SUCCESS";
@@ -26,6 +28,9 @@ export const ORDER_PAY_REQUEST = "ORDER_PAY_REQUEST";
 export const ORDER_PAY_SUCCESS = "ORDER_PAY_SUCCESS";
 export const ORDER_PAY_FAIL = "ORDER_PAY_FAIL";
 export const ORDER_PAY_RESET = "ORDER_PAY_RESET";
+export const MY_ORDER_DETAILS_SUCCESS = "MY_ORDER_DETAILS_SUCCESS";
+export const MY_ORDER_DETAILS_LOADING = "MY_ORDER_DETAILS_LOADING";
+export const MY_ORDER_DETAILS_ERROR = "MY_ORDER_DETAILS_ERROR";
 
 let token = localStorage.getItem("accessToken");
 console.log("token", token);
@@ -43,7 +48,7 @@ export const registerUser = (userData) => {
 
       if (response.ok) {
         const newUserData = await response.json();
-        console.log("newUserData", newUserData);
+        // console.log("newUserData", newUserData);
         dispatch({
           type: REGISTER_USER,
           payload: newUserData,
@@ -91,7 +96,7 @@ export const userProfile = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("profile", data);
+        // console.log("profile", data);
         dispatch({
           type: GET_ME,
           payload: data,
@@ -166,7 +171,7 @@ export const productDetail = (productId) => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("cartpro", data);
+        // console.log("cartpro", data);
         dispatch({
           type: PRODUCT_DETAILS_SUCCESS,
           payload: data,
@@ -298,11 +303,28 @@ export const createOrder = (order) => {
           type: ORDER_CREATE_SUCCESS,
           payload: data,
         });
+        dispatch({
+          type: ORDER_CREATE_LOADING,
+          payload: false,
+        });
+      } else {
+        dispatch({
+          type: ORDER_CREATE_LOADING,
+          payload: false,
+        });
+        dispatch({
+          type: ORDER_CREATE_ERROR,
+          payload: true,
+        });
       }
     } catch (error) {
       dispatch({
-        type: ORDER_CREATE_FAIL,
-        payload: error.message || error,
+        type: ORDER_CREATE_LOADING,
+        payload: false,
+      });
+      dispatch({
+        type: ORDER_CREATE_ERROR,
+        payload: true,
       });
     }
   };
@@ -388,6 +410,52 @@ export const payOrder = (paymentResult, orderId) => {
       dispatch({
         type: ORDER_PAY_FAIL,
         payload: error.message || error,
+      });
+    }
+  };
+};
+
+export const getMyOrderDetails = (userId) => {
+  return async (dispatch, getState) => {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_BE_URL}/orders/myOrder/${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("myOrder", data);
+        dispatch({
+          type: MY_ORDER_DETAILS_SUCCESS,
+          payload: data,
+        });
+        dispatch({
+          type: MY_ORDER_DETAILS_LOADING,
+          payload: false,
+        });
+      } else {
+        dispatch({
+          type: MY_ORDER_DETAILS_LOADING,
+          payload: false,
+        });
+        dispatch({
+          type: MY_ORDER_DETAILS_ERROR,
+          payload: true,
+        });
+      }
+    } catch (error) {
+      dispatch({
+        type: MY_ORDER_DETAILS_LOADING,
+        payload: false,
+      });
+      dispatch({
+        type: MY_ORDER_DETAILS_ERROR,
+        payload: true,
       });
     }
   };

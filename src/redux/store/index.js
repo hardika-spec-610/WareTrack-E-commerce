@@ -14,6 +14,7 @@ import {
   orderPayReducer,
 } from "../reducers/orderReducer";
 import orderDetailsReducer from "../reducers/orderDetailsReducer";
+import myOrderReducer from "../reducers/myOrderReducer";
 
 const persistConfig = {
   storage: sessionStorage,
@@ -36,6 +37,7 @@ const combinedReducer = combineReducers({
   // orderDetails: orderDeatilsReducer,
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
+  myOrders: myOrderReducer,
 });
 
 const cartItemsFromLocalStorage = localStorage.getItem("cartItem")

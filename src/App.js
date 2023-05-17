@@ -12,6 +12,7 @@ import ShippingScreen from "./components/ShippingScreen";
 import PaymentScreen from "./components/PaymentScreen";
 import PlaceOrderScreen from "./components/PlaceOrderScreen";
 import OrderScreen from "./components/OrderScreen";
+import ProfileComponent from "./components/ProfileComponent";
 
 const App = () => {
   return (
@@ -28,7 +29,8 @@ const App = () => {
             <Route element={<ShippingScreen />} path="/shipping" />
             <Route element={<PaymentScreen />} path="/payment" />
             <Route element={<PlaceOrderScreen />} path="/placeorder" />
-            <Route element={<OrderScreen />} path="/orders/:orderId" />
+            <Route element={<OrderScreen />} path="/orders/:orderId?" />
+            <Route element={<ProfileComponent />} path="/profile" />
           </Routes>
         </Router>
       </header>

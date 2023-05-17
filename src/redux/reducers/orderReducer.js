@@ -1,16 +1,8 @@
 import {
-  ORDER_CREATE_FAIL,
-  ORDER_CREATE_REQUEST,
-  ORDER_CREATE_RESET,
+  ORDER_CREATE_ERROR,
+  ORDER_CREATE_LOADING,
   ORDER_CREATE_SUCCESS,
-  ORDER_DETAILS_ERROR,
-  ORDER_DETAILS_FAIL,
-  ORDER_DETAILS_LOADING,
-  ORDER_DETAILS_REQUEST,
-  ORDER_DETAILS_SUCCESS,
   ORDER_PAY_FAIL,
-  ORDER_PAY_REQUEST,
-  ORDER_PAY_RESET,
   ORDER_PAY_SUCCESS,
 } from "../actions";
 
@@ -28,14 +20,16 @@ export const orderCreateReducer = (state = initialState, action) => {
         order: action.payload,
         isLoading: false,
       };
-    case ORDER_CREATE_REQUEST:
+    case ORDER_CREATE_LOADING:
       //   console.log(action.payload);
       return {
-        isLoading: true,
+        ...state,
+        isLoading: action.payload,
       };
 
-    case ORDER_CREATE_FAIL:
+    case ORDER_CREATE_ERROR:
       return {
+        ...state,
         isError: action.payload,
       };
     // case ORDER_CREATE_RESET:

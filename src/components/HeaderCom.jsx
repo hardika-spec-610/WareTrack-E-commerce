@@ -5,16 +5,21 @@ import { BsCartFill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, userProfile } from "../redux/actions";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const HeaderCom = () => {
   const cart = useSelector((state) => state.cart);
-  console.log("headerCart", cart);
+  // console.log("headerCart", cart);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const profile = useSelector((state) => state.profile.user);
-  const orderDetails = useSelector((state) => state.orderDetails.orders);
-  console.log("headerorderDetails", orderDetails);
+  // const orderDetails = useSelector((state) => state.orderDetails.orders);
+  // console.log("headerorderDetails", orderDetails);
   // console.log("profileNav", profile);
 
+  const profileHandler = () => {
+    navigate("/profile");
+  };
   const logoutHandler = () => {
     dispatch(logout());
   };
@@ -55,6 +60,7 @@ const HeaderCom = () => {
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="dropdown-menu-right">
+              <Dropdown.Item onClick={profileHandler}>Profile</Dropdown.Item>
               <Dropdown.Item href="#/action-1" onClick={logoutHandler}>
                 Logout
               </Dropdown.Item>

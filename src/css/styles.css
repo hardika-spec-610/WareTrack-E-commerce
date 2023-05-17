@@ -233,3 +233,16 @@
 .img-b {
   width: 20%;
 }
+.red-danger {
+  color: #721c24 !important;
+}
+.green-light-bg {
+  background-color: #d1e7dd;
+}
+.red-light-bg {
+  background-color: #f8d7da;
+}
+.table-border-black td,
+.table-border-black th {
+  border: 1px solid black !important;
+}

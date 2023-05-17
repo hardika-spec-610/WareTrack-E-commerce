@@ -12,8 +12,8 @@ import { FaUserAlt, FaTruckMoving } from "react-icons/fa";
 import { HiLocationMarker } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { ORDER_CREATE_RESET, createOrder } from "../redux/actions";
+import { useState } from "react";
+import { createOrder, getOrderDetails } from "../redux/actions";
 
 const PlaceOrderScreen = () => {
   const dispatch = useDispatch();
@@ -22,6 +22,10 @@ const PlaceOrderScreen = () => {
   console.log("cart", cart);
   const profile = useSelector((state) => state.profile.user);
   console.log("profileNav", profile);
+  // const loading = useSelector((state) => state.orderCreate.isLoading);
+  // console.log("loading", loading);
+  const [isLoadingState, setIsLoadingState] = useState(false);
+  const [orderCreated, setOrderCreated] = useState(false);
 
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
@@ -35,7 +39,7 @@ const PlaceOrderScreen = () => {
     shippingPrice: addDecimals(cart.itemsPrice > 100 ? 0 : 5),
   };
   updatedCart.taxPrice = addDecimals(
-    Number((0.15 * updatedCart.itemsPrice).toFixed(2))
+    Number((0.5 * updatedCart.itemsPrice).toFixed(2))
   );
   updatedCart.totalPrice = addDecimals(
     Number(updatedCart.itemsPrice) +
@@ -44,50 +48,39 @@ const PlaceOrderScreen = () => {
   );
 
   console.log("updatedCart", updatedCart);
-  // const addDecimals = (num) => {
-  //   return (Math.round(num * 100) / 100).toFixed(2);
-  // };
 
-  // cart.itemsPrice = addDecimals(
-  //   cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0)
-  // );
+  const placeOrderHandler = async () => {
+    setIsLoadingState(true); // Set loading state to true
+    if (!orderCreated) {
+      dispatch(
+        createOrder({
+          user: profile._id,
+          orderItems: updatedCart.cartItems,
+          shippingAddress: updatedCart.shippingAddress,
+          paymentMethod: updatedCart.paymentMethod,
+          itemsPrice: updatedCart.itemsPrice,
+          shippingPrice: updatedCart.shippingPrice,
+          taxPrice: updatedCart.taxPrice,
+          totalPrice: updatedCart.totalPrice,
+        })
+      );
+      setOrderCreated(true);
+    }
+    // Wait for the order creation
+    while (isLoadingState || !order) {
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay execution for 100 milliseconds
+    }
 
-  // cart.shippingPrice = addDecimals(cart.itemsPrice > 100 ? 0 : 5);
-  // cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
-  // cart.totalPrice = (
-  //   Number(cart.itemsPrice) +
-  //   Number(cart.shippingPrice) +
-  //   Number(cart.taxPrice)
-  // ).toFixed(2);
+    console.log("orderIdFuc", order._id);
+    navigate(`/orders/${order._id}`);
+    dispatch(getOrderDetails(order._id));
+  };
 
   const orderCreate = useSelector((state) => state.orderCreate);
   console.log("orderCreate", orderCreate);
+  // eslint-disable-next-line no-unused-vars
   const { order, isLoading, isError, success } = orderCreate;
   console.log("orderId", order._id);
-
-  // useEffect(() => {
-  //   if (success) {
-  //     navigate(`/orders/${order._id}`);
-  //     // dispatch({ type: ORDER_CREATE_RESET });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [dispatch, success, order]);
-
-  const placeOrderHandler = () => {
-    dispatch(
-      createOrder({
-        user: profile._id,
-        orderItems: updatedCart.cartItems,
-        shippingAddress: updatedCart.shippingAddress,
-        paymentMethod: updatedCart.paymentMethod,
-        itemsPrice: updatedCart.itemsPrice,
-        shippingPrice: updatedCart.shippingPrice,
-        taxPrice: updatedCart.taxPrice,
-        totalPrice: updatedCart.totalPrice,
-      })
-    );
-    navigate(`/orders/${order._id}`);
-  };
 
   return (
     <div>
@@ -221,7 +214,7 @@ const PlaceOrderScreen = () => {
                     className="blue-btn"
                     onClick={placeOrderHandler}
                   >
-                    Place Order
+                    {isLoading ? "Placing Order..." : "Place Order"}
                   </Button>
                 </div>
                 {isError && (
