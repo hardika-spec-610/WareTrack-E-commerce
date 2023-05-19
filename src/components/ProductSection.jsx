@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const ProductSection = (props) => {
   const dispatch = useDispatch();
   const isLoading = useSelector((state) => state.productList.isLoading);
-  console.log("isLoading", isLoading);
+  // console.log("isLoading", isLoading);
   const products = useSelector((state) => state.productList.products.products);
   console.log("products", products);
 

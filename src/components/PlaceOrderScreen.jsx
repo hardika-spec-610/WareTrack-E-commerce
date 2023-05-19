@@ -12,7 +12,7 @@ import { FaUserAlt, FaTruckMoving } from "react-icons/fa";
 import { HiLocationMarker } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createOrder, getOrderDetails } from "../redux/actions";
 
 const PlaceOrderScreen = () => {
@@ -22,10 +22,9 @@ const PlaceOrderScreen = () => {
   console.log("cart", cart);
   const profile = useSelector((state) => state.profile.user);
   console.log("profileNav", profile);
-  // const loading = useSelector((state) => state.orderCreate.isLoading);
-  // console.log("loading", loading);
+
+  // eslint-disable-next-line no-unused-vars
   const [isLoadingState, setIsLoadingState] = useState(false);
-  const [orderCreated, setOrderCreated] = useState(false);
 
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
@@ -39,7 +38,7 @@ const PlaceOrderScreen = () => {
     shippingPrice: addDecimals(cart.itemsPrice > 100 ? 0 : 5),
   };
   updatedCart.taxPrice = addDecimals(
-    Number((0.5 * updatedCart.itemsPrice).toFixed(2))
+    Number((0.15 * updatedCart.itemsPrice).toFixed(2))
   );
   updatedCart.totalPrice = addDecimals(
     Number(updatedCart.itemsPrice) +
@@ -49,27 +48,43 @@ const PlaceOrderScreen = () => {
 
   console.log("updatedCart", updatedCart);
 
+  useEffect(() => {
+    setIsLoadingState(true);
+    dispatch(
+      createOrder({
+        user: profile._id,
+        orderItems: updatedCart.cartItems,
+        shippingAddress: updatedCart.shippingAddress,
+        paymentMethod: updatedCart.paymentMethod,
+        itemsPrice: updatedCart.itemsPrice,
+        shippingPrice: updatedCart.shippingPrice,
+        taxPrice: updatedCart.taxPrice,
+        totalPrice: updatedCart.totalPrice,
+      })
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
+
   const placeOrderHandler = async () => {
-    setIsLoadingState(true); // Set loading state to true
-    if (!orderCreated) {
-      dispatch(
-        createOrder({
-          user: profile._id,
-          orderItems: updatedCart.cartItems,
-          shippingAddress: updatedCart.shippingAddress,
-          paymentMethod: updatedCart.paymentMethod,
-          itemsPrice: updatedCart.itemsPrice,
-          shippingPrice: updatedCart.shippingPrice,
-          taxPrice: updatedCart.taxPrice,
-          totalPrice: updatedCart.totalPrice,
-        })
-      );
-      setOrderCreated(true);
-    }
+    // setIsLoadingState(true); // Set loading state to true
+
+    // dispatch(
+    //   createOrder({
+    //     user: profile._id,
+    //     orderItems: updatedCart.cartItems,
+    //     shippingAddress: updatedCart.shippingAddress,
+    //     paymentMethod: updatedCart.paymentMethod,
+    //     itemsPrice: updatedCart.itemsPrice,
+    //     shippingPrice: updatedCart.shippingPrice,
+    //     taxPrice: updatedCart.taxPrice,
+    //     totalPrice: updatedCart.totalPrice,
+    //   })
+    // );
+
     // Wait for the order creation
-    while (isLoadingState || !order) {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay execution for 100 milliseconds
-    }
+    // while (isLoadingState || !order) {
+    //   await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay execution for 100 milliseconds
+    // }
 
     console.log("orderIdFuc", order._id);
     navigate(`/orders/${order._id}`);

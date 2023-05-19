@@ -16,14 +16,14 @@ const OrderScreen = () => {
   const dispatch = useDispatch();
   // eslint-disable-next-line no-unused-vars
   const [sdkReady, setSdkReady] = useState(false);
-  const cart = useSelector((state) => state.cart);
-  console.log("orderScreencart", cart);
+  // const cart = useSelector((state) => state.cart);
+  // console.log("orderScreencart", cart);
   const orderDetails = useSelector((state) => state.orderDetails.orders);
   console.log("orderDetails", orderDetails);
   const order = useSelector((state) => state.orderCreate.order);
-  console.log("orderScreen", order);
+  // console.log("orderScreen", order);
   const orderPay = useSelector((state) => state.orderPay);
-  console.log("orderPay", orderPay);
+  // console.log("orderPay", orderPay);
   const { success: successPay } = orderPay;
 
   const addDecimals = (num) => {
@@ -163,8 +163,8 @@ const OrderScreen = () => {
                     {orderDetails.isDelivered ? (
                       <div className="bg-info">
                         <p className="text-white text-center text-sm -start">
-                          Delivered on{" "}
-                          {format(new Date(orderDetails.deliveredAt), "PPpp")}
+                          Delivered
+                          {/* {format(new Date(orderDetails.deliveredAt), "PPpp")} */}
                         </p>
                       </div>
                     ) : (

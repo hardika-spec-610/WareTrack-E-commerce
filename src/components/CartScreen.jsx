@@ -1,7 +1,7 @@
 import { Button, Col, Container, Row } from "react-bootstrap";
 import HeaderCom from "./HeaderCom";
 import "../css/styles.css";
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useLocation, useParams } from "react-router";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart, removeFromCart } from "../redux/actions";
@@ -12,7 +12,6 @@ const CartScreen = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const location = useLocation();
-  const navigate = useNavigate();
   const qty = location.search ? Number(location.search.split("=")[1]) : 1;
   //   console.log(qty);
   const cart = useSelector((state) => state.cart);

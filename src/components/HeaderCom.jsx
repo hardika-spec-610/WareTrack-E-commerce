@@ -32,7 +32,7 @@ const HeaderCom = () => {
   return (
     <Navbar expand="lg">
       <Container>
-        <Navbar.Brand href="#">
+        <Navbar.Brand href="/dashboard">
           <img src={Logo} alt="Shop logo" className="logo" />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
