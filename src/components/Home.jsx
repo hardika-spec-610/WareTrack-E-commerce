@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-// import { PaginationControl } from "react-bootstrap-pagination-control";
 import ProductSection from "./ProductSection";
 import HeaderCom from "./HeaderCom";
 import { Container } from "react-bootstrap";
@@ -43,17 +42,6 @@ const Home = () => {
       <Container>
         <h4 className="pro-title">NEW ARRIVALS</h4>
         <ProductSection />
-        {/* <PaginationControl
-          page={nextPageLink}
-          between={3}
-          total={productsMain.total}
-          limit={10}
-          changePage={handlePageChange}
-          ellipsis={1}
-          links={productsMain.links}
-        >
-         
-        </PaginationControl> */}
       </Container>
       <footer className="footer-bg mt-5 py-3">
         <Container>
