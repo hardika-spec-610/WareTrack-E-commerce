@@ -17,14 +17,17 @@ const Home = () => {
   console.log("profileNav", profile);
   const products = useSelector((state) => state.productList.products);
   console.log("products", products);
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
 
   useEffect(() => {
-    if (!localStorage.getItem("accessToken")) {
+    if (!isLoggedIn) {
       window.location.href = "/";
-      // Reload the page
-      // window.location.reload();
+      // Alternatively, you can use a routing library to navigate within a single-page application (SPA)
+      // history.push('/');
+    } else {
+      dispatch(userProfile());
     }
-    dispatch(userProfile());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   useEffect(() => {

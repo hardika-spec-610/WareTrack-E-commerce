@@ -5,7 +5,7 @@ import "../css/styles.css";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_ALL_LOGIN } from "../redux/actions";
+import { GET_ALL_LOGIN, setAccessToken } from "../redux/actions";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -40,6 +40,7 @@ const LoginForm = () => {
           type: GET_ALL_LOGIN,
           payload: data.accessToken,
         });
+        dispatch(setAccessToken(data.accessToken));
         localStorage.setItem("accessToken", data.accessToken);
         console.log("accessToken", data.accessToken);
         navigate("/dashboard");

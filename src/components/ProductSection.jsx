@@ -11,14 +11,16 @@ const ProductSection = (props) => {
   // console.log("isLoading", isLoading);
   const products = useSelector((state) => state.productList.products.products);
   console.log("products", products);
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
 
   useEffect(() => {
-    // if (!localStorage.getItem("accessToken")) {
-    //   window.location.href = "/";
-    //   // Reload the page
-    //   // window.location.reload();
-    // }
-    dispatch(getAllProducts());
+    if (!isLoggedIn) {
+      window.location.href = "/";
+      // Alternatively, you can use a routing library to navigate within a single-page application (SPA)
+      // history.push('/');
+    } else {
+      dispatch(getAllProducts());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 

@@ -17,7 +17,6 @@ const OrderScreen = () => {
   const dispatch = useDispatch();
   // eslint-disable-next-line no-unused-vars
   const [sdkReady, setSdkReady] = useState(false);
-
   // const cart = useSelector((state) => state.cart);
   // console.log("orderScreencart", cart);
   const orderDetails = useSelector((state) => state.orderDetails.orders);

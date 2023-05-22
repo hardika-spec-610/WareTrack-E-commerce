@@ -1,4 +1,6 @@
 export const GET_ALL_LOGIN = "GET_ALL_LOGIN";
+export const SET_ACCESS_TOKEN = "SET_ACCESS_TOKEN";
+export const LOGOUT = "LOGOUT";
 export const REGISTER_USER = "REGISTER_USER";
 export const GET_USERS = "GET_USERS";
 export const PRODUCT_LIST_SUCCESS = "PRODUCT_LIST_SUCCESS";
@@ -11,7 +13,6 @@ export const CART_REMOVE_ITEM = "CART_REMOVE_ITEM";
 export const GET_ME = "GET_ME";
 export const GET_ME_LOADING = "GET_ME_LOADING";
 export const GET_ME_ERROR = "GET_ME_ERROR";
-export const USER_LOGOUT = "USER_LOGOUT";
 export const CART_SAVE_SHIPPING_ADDRESS = "CART_SAVE_SHIPPING_ADDRESS";
 export const CART_SAVE_PAYMENT_METHOD = "CART_SAVE_PAYMENT_METHOD";
 export const CART_CLEAR_ITEMS = "CART_CLEAR_ITEMS";
@@ -34,6 +35,22 @@ export const MY_ORDER_DETAILS_ERROR = "MY_ORDER_DETAILS_ERROR";
 
 let token = localStorage.getItem("accessToken");
 console.log("token", token);
+
+export const setAccessToken = (accessToken) => ({
+  type: SET_ACCESS_TOKEN,
+  payload: accessToken,
+});
+export const logout = () => {
+  return (dispatch) => {
+    // Remove access token and update state
+    dispatch({
+      type: LOGOUT,
+    });
+
+    // Navigate to the desired URL
+    window.location.href = "/";
+  };
+};
 
 export const registerUser = (userData) => {
   return async (dispatch, getState) => {
@@ -65,10 +82,11 @@ export const registerUser = (userData) => {
 export const getAllUsers = () => {
   return async (dispatch, getState) => {
     try {
+      const { accessToken } = getState().login;
       const response = await fetch(`${process.env.REACT_APP_BE_URL}/users`, {
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
 
       if (response.ok) {
@@ -88,9 +106,10 @@ export const getAllUsers = () => {
 export const userProfile = () => {
   return async (dispatch, getState) => {
     try {
+      const { accessToken } = getState().login;
       const response = await fetch(`${process.env.REACT_APP_BE_URL}/users/me`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -131,9 +150,10 @@ export const userProfile = () => {
 export const getAllProducts = () => {
   return async (dispatch, getState) => {
     try {
+      const { accessToken } = getState().login;
       const response = await fetch(`${process.env.REACT_APP_BE_URL}/products`, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       });
 
@@ -157,6 +177,7 @@ export const getAllProducts = () => {
 export const productDetail = (productId) => {
   return async (dispatch, getState) => {
     try {
+      const { accessToken } = getState().login;
       dispatch({
         type: PRODUCT_DETAILS_REQUEST,
       });
@@ -164,7 +185,7 @@ export const productDetail = (productId) => {
         `${process.env.REACT_APP_BE_URL}/products/${productId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -189,11 +210,12 @@ export const productDetail = (productId) => {
 export const addToCart = (productId, qty) => {
   return async (dispatch, getState) => {
     try {
+      const { accessToken } = getState().login;
       const response = await fetch(
         `${process.env.REACT_APP_BE_URL}/products/${productId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -234,21 +256,6 @@ export const removeFromCart = (productId) => {
         "cartItems",
         JSON.stringify(getState().cart.cartItems)
       );
-    } catch (error) {
-      console.error(error);
-    }
-  };
-};
-
-export const logout = () => {
-  return async (dispatch, getState) => {
-    localStorage.removeItem(token);
-    console.log("removetoken", localStorage.removeItem("accessToken"));
-    try {
-      dispatch({
-        type: USER_LOGOUT,
-      });
-      document.location.href = "/";
     } catch (error) {
       console.error(error);
     }
@@ -333,11 +340,12 @@ export const createOrder = (order) => {
 export const getOrderDetails = (orderId) => {
   return async (dispatch, getState) => {
     try {
+      const { accessToken } = getState().login;
       const response = await fetch(
         `${process.env.REACT_APP_BE_URL}/orders/${orderId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -418,11 +426,12 @@ export const payOrder = (paymentResult, orderId) => {
 export const getMyOrderDetails = (userId) => {
   return async (dispatch, getState) => {
     try {
+      const { accessToken } = getState().login;
       const response = await fetch(
         `${process.env.REACT_APP_BE_URL}/orders/myOrder/${userId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
