@@ -1,6 +1,7 @@
 import { useParams } from "react-router";
 import HeaderCom from "./HeaderCom";
-import { PayPalButton } from "react-paypal-button-v2";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+// import { PayPalButton } from "react-paypal-button-v2";
 import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 import { FaUserAlt, FaTruckMoving } from "react-icons/fa";
 import { HiLocationMarker } from "react-icons/hi";
@@ -16,6 +17,7 @@ const OrderScreen = () => {
   const dispatch = useDispatch();
   // eslint-disable-next-line no-unused-vars
   const [sdkReady, setSdkReady] = useState(false);
+
   // const cart = useSelector((state) => state.cart);
   // console.log("orderScreencart", cart);
   const orderDetails = useSelector((state) => state.orderDetails.orders);
@@ -23,7 +25,7 @@ const OrderScreen = () => {
   const order = useSelector((state) => state.orderCreate.order);
   // console.log("orderScreen", order);
   const orderPay = useSelector((state) => state.orderPay);
-  // console.log("orderPay", orderPay);
+  console.log("orderPay", orderPay);
   const { success: successPay } = orderPay;
 
   const addDecimals = (num) => {
@@ -248,10 +250,23 @@ const OrderScreen = () => {
                 </div>
                 {!orderDetails.isPaid && (
                   <div className="d-flex justify-content-end mt-3">
-                    <PayPalButton
-                      amount={orderDetails.totalPrice}
-                      onSuccess={successPaymentHandler}
-                    />
+                    <PayPalScriptProvider>
+                      <PayPalButtons
+                        createOrder={(data, actions) => {
+                          // Create and return the order details
+                          return actions.order.create({
+                            purchase_units: [
+                              {
+                                amount: {
+                                  value: orderDetails.totalPrice,
+                                },
+                              },
+                            ],
+                          });
+                        }}
+                        onApprove={successPaymentHandler}
+                      />
+                    </PayPalScriptProvider>
                   </div>
                 )}
               </>
