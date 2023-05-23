@@ -23,7 +23,7 @@ const LoginComponent = () => {
         <div className="login-block">
           <h4 className="mt-4">Login</h4>
           <p className="mt-3">see your growth and get support!</p>
-          <a
+          {/* <a
             className="btn"
             onClick={(e) => {
               e.stopPropagation();
@@ -32,7 +32,7 @@ const LoginComponent = () => {
           >
             <span>Sign in with google</span>{" "}
             <Image src={googleIcon} alt="google logo" />
-          </a>
+          </a> */}
           <LoginForm />
           <div>
             <span>Not regestered yet?</span>
